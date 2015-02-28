@@ -1,0 +1,279 @@
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+
+}
+
+
+\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+
+%für Handouts 2 Folien auf einer Din A4 Seite
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+\newcommand{\jahr}{2015}
+\newcommand{\datum}{28.2.2015}
+
+
+\title[LB-DB 1] % (optional, nur bei langen Titeln nötig)
+{LB-DB 1  \datum}
+
+%\subtitle
+%{} % (optional)
+
+\author[R. Schlager] % (optional, nur bei vielen Autoren)
+{Dipl.-Ing. Reinhard Schlager}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+
+\institute[FH Salzburg] % (optional, aber oft nötig)
+{
+%  \inst{1}%
+  its\\
+  FH Salzburg}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+% - Keep it simple, niemand interessiert sich für die genau Adresse.
+
+\date[] % (optional)
+{\jahr / LB-Datenbanksysteme}
+
+
+\subject{Informatik}
+% Dies wird lediglich in den PDF Informationskatalog einfügt. Kann gut
+% weggelassen werden.
+
+
+% Falls eine Logodatei namens "university-logo-filename.xxx" vorhanden
+% ist, wobei xxx ein von latex bzw. pdflatex lesbares Graphikformat
+% ist, so kann man wie folgt ein Logo einfügen:
+
+\pgfdeclareimage[height=0.5cm]{university-logo}{fh}
+\logo{\pgfuseimage{university-logo}}
+
+
+
+% Folgendes sollte gelöscht werden, wenn man nicht am Anfang jedes
+% Unterabschnitts die Gliederung nochmal sehen möchte.
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Gliederung}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% Falls Aufzählungen immer schrittweise gezeigt werden sollen, kann
+% folgendes Kommando benutzt werden:
+
+\beamerdefaultoverlayspecification{<+->}
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gliederung}
+  \tableofcontents
+  % Die Option [pausesections] könnte nützlich sein.
+\end{frame}
+
+\section{Anmeldung}
+
+\begin{frame}
+\frametitle{oracle}
+\begin{itemize}
+   \item https://iacademy.oracle.com
+   \item Workspace AT\_1532
+   \item Username AT\_1532\_SQL01\_Snn
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/login.pdf}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/menu1.pdf}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/menu2.pdf}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/menu3.pdf}
+\end{frame}
+
+\section{SQL Übersicht}
+
+\begin{frame}
+\frametitle{SQL Übersicht}
+
+\begin{itemize}
+\item Data Definition Language (DDL)
+  \begin{itemize}
+  \item CREATE
+  \item ALTER
+  \item DROP
+  \end{itemize}
+\item Data Manipulation Language (DML)
+  \begin{itemize}
+  \item INSERT
+  \item UPDATE
+  \item DELETE
+  \end{itemize}
+\item SELECT
+\end{itemize}
+
+\end{frame}
+
+
+\subsection{CREATE TABLE}
+\begin{frame}[fragile]
+\frametitle{CREATE TABLE}
+\begin{semiverbatim}
+\uncover<1->{\alert<1>{CREATE TABLE tabellenname}}
+\uncover<2->{\alert<2>{(feldname datentyp\{,feldname datentyp\}}}
+\uncover<2->{\alert<2>{)}}
+\uncover<2->{\alert<2>{ }}
+\uncover<3->{\alert<3>{CREATE TABLE person}}
+\uncover<4->{\alert<4>{(persnr INT}}
+\uncover<4->{\alert<4>{,vorname  CHAR(45)}}
+\uncover<4->{\alert<4>{,nachname CHAR(45)}}
+\uncover<4->{\alert<4>{)}}
+\end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/createtable.pdf}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\includegraphics<1>[height=8cm]{../pics/describe.pdf}
+\end{frame}
+\subsection{INSERT}
+
+\begin{frame}[fragile]
+\frametitle{INSERT}
+\framesubtitle{Syntax}
+\begin{semiverbatim}
+\uncover<0->{\alert<0>{INSERT INTO tabellename}}
+\uncover<1->{\alert<1>{(spalte\{,spalte\})}}
+\uncover<2->{\alert<2>{VALUES}}
+\uncover<3->{\alert<3>{(wert \{,wert\})}}
+\end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{INSERT}
+\framesubtitle{Beispiel}
+\begin{semiverbatim}
+\uncover<0->{\alert<0>{INSERT INTO person}}
+\uncover<1->{\alert<1>{(persnr,vorname,nachname)}}
+\uncover<2->{\alert<2>{VALUES}}
+\uncover<3->{\alert<3>{(1,'Reinhard','Schlager')}}
+\end{semiverbatim}
+\end{frame}
+
+\subsection{SELECT}
+\begin{frame}[fragile]
+\frametitle{SELECT}
+\framesubtitle{Syntax}
+\begin{semiverbatim}
+\uncover<0->{\alert<0>{SELECT}}
+\uncover<1->{\alert<1>{\{*|spalte|ausdruck\}}}
+\uncover<2->{\alert<2>{FROM tabellenname}}
+\uncover<3->{\alert<3>{[WHERE bedingung]}}
+\uncover<4->{\alert<4>{[ORDER BY \{spalte|ausdruck\} [ASC|DESC] }}
+\end{semiverbatim}
+%\visible<4->{Note the use of \alert{\texttt{std::}}.}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{SELECT}
+\framesubtitle{Beispiel}
+\begin{semiverbatim}
+\uncover<0->{\alert<0>{SELECT}}
+\uncover<1->{\alert<1>{vorname,nachname}}
+\uncover<2->{\alert<2>{FROM person}}
+\uncover<3->{\alert<3>{WHERE nachname LIKE 'M%'}}
+\uncover<4->{\alert<4>{ORDER BY persnr}}
+\end{semiverbatim}
+%\visible<4->{Note the use of \alert{\texttt{std::}}.}
+\end{frame}
+
+\section{Übung 1}
+
+
+\begin{frame}
+\frametitle{Übung 1 LB-DB \datum}
+\framesubtitle{Abgabe (Papier) und Präsentation in der nächsten Übung}
+\begin{enumerate}
+\item Suchen Sie die Online Dokumentation zu ORACLE SQL
+\item Entwerfen Sie das Datenmodell eines einfachen Fahrplans.
+  (Bahnhöfe, Züge, Abfahrten, Ankünfte)
+\item Beschreiben Sie in welcher Form Sie die Daten abspeichern wollen
+\item Formulieren Sie 3 sinnvolle Anfragen an Ihr System als Text.
+\item Schreiben Sie geeignete SQL-DDL Statements, die die entsprechenden Tabellen erzeugen und protokollieren Sie den Ablauf.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Übung 1(2) LB-DB \datum}
+\framesubtitle{Abgabe (Papier) und Präsentation in der nächsten Übung}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item Befüllen Sie die Tabellen mit einigen sinnvollen Datensätzen durch die entsprechenden SQL Befehle und protokollieren Sie den Ablauf.
+\item Versuchen Sie jetzt, die 3 Abfragen aus Aufgabe 4 als SQL Kommandos zu
+  formulieren. Protokollieren Sie die Kommandos und das Ergebnis.
+\item Freiwillig - Wie würden Sie Ihr Datenmodell grafisch darstellen wollen.
+\end{enumerate}
+\end{frame}
+
+
+\subsection{Links}
+
+
+\begin{frame}
+\frametitle{links}
+\begin{enumerate}
+%\item http://www.users.fh-salzburg.ac.at/\%7Enulamec
+\item http://de.wikipedia.org/wiki/SQL
+\item http://www.sql-und-xml.de/xml/sql-tutorial/index
+\end{enumerate}
+\end{frame}
+
+
+
+
+\end{document}
+
+

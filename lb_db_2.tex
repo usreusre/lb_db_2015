@@ -1,0 +1,454 @@
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+
+}
+
+
+\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+%für Handouts 2 Folien auf einer Din A4 Seite
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+\newcommand{\jahr}{2015}
+\newcommand{\datum}{28.2.2015}
+
+\title[LB-DB 2] % (optional, nur bei langen Titeln nötig)
+{LB-DB 2 - \datum}
+
+%\subtitle
+%{} % (optional)
+
+\author[R. Schlager] % (optional, nur bei vielen Autoren)
+{Dipl.-Ing. Reinhard Schlager}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+
+\institute[FH Salzburg] % (optional, aber oft nötig)
+{
+ % \inst{1}%
+  its\\
+  FH Salzburg}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+% - Keep it simple, niemand interessiert sich für die genau Adresse.
+
+\date[] % (optional)
+{\jahr / LB-Datenbanksysteme}
+
+
+\subject{Informatik}
+% Dies wird lediglich in den PDF Informationskatalog einfügt. Kann gut
+% weggelassen werden.
+
+
+% Falls eine Logodatei namens "university-logo-filename.xxx" vorhanden
+% ist, wobei xxx ein von latex bzw. pdflatex lesbares Graphikformat
+% ist, so kann man wie folgt ein Logo einfügen:
+
+\pgfdeclareimage[height=0.5cm]{university-logo}{fh}
+\logo{\pgfuseimage{university-logo}}
+
+
+
+% Folgendes sollte gelöscht werden, wenn man nicht am Anfang jedes
+% Unterabschnitts die Gliederung nochmal sehen möchte.
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Gliederung}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% Falls Aufzählungen immer schrittweise gezeigt werden sollen, kann
+% folgendes Kommando benutzt werden:
+
+\beamerdefaultoverlayspecification{<+->}
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gliederung}
+  \tableofcontents
+  % Die Option [pausesections] könnte nützlich sein.
+\end{frame}
+
+
+\section{Begriffe}
+
+
+
+\subsection{Schlüssel}
+
+\begin{frame}
+\frametitle{Schlüssel}
+\framesubtitle{Primärschlüssel}
+
+\begin{block}{Primärschlüssel}
+Identifiziert jeden Tupel (Record) einer Relation (Tabelle) eindeutig.
+Mit Hilfe des Primärschlüssels selektiert man in einer relationalen Datenbank
+einen Datensatz eindeutig und weil dem Primärschlüssel ein Index zugrunde liegen sollte auch schnell.
+Das wichtigste und erstrangig verwendete Selektionskriterium, um Daten in einer Tabelle zu selektieren
+\end{block}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Schlüssel}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\alert{persnr} & VorName & NachName & Adresse\\
+\hline
+\hline
+\alert{1} & Franz & Müller & S.Marcus Str.24\\
+\hline
+\alert{2} & Fritz & Maier  & G.Liebherrg. 12\\
+\hline
+\alert{3} & ... & ... & ... \\
+\hline
+\end{tabular}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schlüssel}
+  \frametitle{Arten von Schlüsseln}
+
+  \begin{block}{Natürliche Schlüssel}
+    Sozialversicherungsnummer\\
+    ISBN Nummer
+    Vorname + NachName +Geburtsdatum ??\\
+  \end{block}
+
+  \begin{block}{Künstliche Schlüssel (Surrogat)}
+    Kundennummer\\
+    Auftragsnummer\\
+    Vorgangnummer\\
+    Rechnungsnummer
+  \end{block}
+\end{frame}
+
+
+
+\section{ERM}
+\subsection{1 zu n}
+
+\begin{frame}
+  \frametitle{1 zu n Beziehung}
+  \begin{block}{1 zu n Beziehung}
+    Eine Firma beschäftigt mehrere (n) Mitarbeiter\\
+    Ein Mitarbeiter ist in \emph{einer} Firma beschäftigt.
+  \end{block}
+  \includegraphics<1>[height=4cm]{../pics/erm_1_n.pdf}
+\end{frame}
+
+\subsection{n zu m}
+
+\begin{frame}
+  \frametitle{n zu m Beziehung}
+  \begin{block}{n zu m Beziehung}
+    Eine Autor schreibt mehrere (m) Bücher\\
+    Ein Buch kann von n Autoren geschrieben worden sein.
+  \end{block}
+  \includegraphics<1>[height=4cm]{../pics/erm_n_m.pdf}
+\end{frame}
+
+%\subsection{1 zu 1}
+
+\begin{frame}
+  \frametitle{1 zu 1 Beziehung}
+  \begin{block}{1 zu 1 Beziehung}
+    Eine Bundesland hat \emph{einen} Landeshauptmann\\
+    Ein Landeshauptmann ist für \emph{ein} Bundesland verantwortlich.
+  \end{block}
+  \includegraphics<1>[height=4cm]{../pics/erm_1_1.pdf}
+\end{frame}
+
+\subsection{Von ERM zu den Tabellen }
+
+\begin{frame}
+  \frametitle{1:n Von ERM zu den Tabellen }
+  \begin{block}{1:n}
+    Eine 1:n Beziehung wird mit zwei Tabellen abgegebildet.\\
+    Der Primärschlüssel der 1 Seite wird zum Fremdschlüssel der n Seite.
+  \end{block}
+  \includegraphics<1>[height=4cm]{../pics/erm_1_n_2_table.pdf}
+\end{frame}
+
+%\subsection{n:m Von ERM zu den Tabellen }
+\begin{frame}
+  \frametitle{n:m Von ERM zu den Tabellen }
+  \begin{block}{n:m}
+    Eine n:m Beziehung wird mit drei Tabellen abgegebildet.\\
+    Die dritte Tabelle besteht aus den Primärschlüsseln der beteiligten Relationen.
+  \end{block}
+  \includegraphics<1>[height=4cm]{../pics/erm_n_m_2_table.pdf}
+\end{frame}
+
+\section{SQL}
+
+\subsection{Der Join}
+
+\begin{frame}[fragile]
+\frametitle{Der Join}
+\framesubtitle{Join mit 2 Tabellen}
+
+\begin{block}{}
+Möchte man \emph{eine} Liste aus \emph{zwei} Tabellen,
+die miteinander in Beziehung stehen, erzeugen muss man diese Tabellen
+durch Schlüssel und Fremdschlüssel miteinander joinen.
+\end{block}
+ 
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{SELECT  tab1.att1, tab1.att2, tab2.att1}}
+    \uncover<1->{\alert<1>{FROM tab1, tab2}}
+    \uncover<2->{\alert<2>{WHERE  tab1.fk = tab2.pk}}
+  \end{semiverbatim}
+
+\begin{block}{}
+  Lässt man die WHERE Klausel weg, enthält die Liste \emph{alle} möglichen Kombinationen
+  der beiden Tabellen.
+  Wenn tab1 20 und tab2 40 Datensätze enthält, wäre das Ergebnis 
+  eine Liste von $20\times 40 = 800$ Sätzen. 
+\end{block}
+\end{frame}
+
+
+\subsection{Der Join - Beispiel}
+
+\begin{frame}[fragile]
+\frametitle{Der Join - Beispiel}
+\framesubtitle{Join mit 2 Tabellen - Beispiel}
+
+\begin{semiverbatim}
+  \uncover<1->{\alert<1>{SELECT  journalist.vorname, journalist.nachname,}}
+  \uncover<1->{\alert<1>{medium.firmenname}}
+  \uncover<2->{\alert<2>{FROM journalist, medium}}
+  \uncover<3->{\alert<3>{WHERE  jounalist.medium\_id = medium.medium\_id}}
+\end{semiverbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Der Join - Beispiel mit alias}
+\framesubtitle{Join mit 2 Tabellen - Beispiel - mir alias}
+
+\begin{block}{}
+oder kürzer durch Umbenennung der Tabellen in FROM Zeile:
+\end{block}
+\begin{semiverbatim}
+  \uncover<2->{\alert<2>{SELECT  j.vorname, j.nachname,}}
+  \uncover<2->{\alert<2>{m.firmenname}}
+  \uncover<1->{\alert<1>{FROM journalist j, medium m}}
+  \uncover<2->{\alert<2>{WHERE  j.medium\_id = m.medium\_id}}
+\end{semiverbatim}
+
+\end{frame}
+
+
+\subsection{UNION ALL}
+
+\begin{frame}[fragile]
+  \frametitle{UNION ALL}
+  \framesubtitle{Syntax}
+  \begin{semiverbatim}
+    \uncover<0->{\alert<0>{SELECT att1,att2,att3 FROM tab1 [WHERE ...]}}
+    \uncover<1->{\alert<1>{UNION ALL}}
+    \uncover<2->{\alert<2>{SELECT att1,att2,att3 FROM tab2 [WHERE ...]}}
+  \end{semiverbatim}
+\end{frame}
+
+\subsection{IN - NOT IN}
+
+
+\begin{frame}[fragile]
+  \frametitle{IN - NOT IN}
+  \framesubtitle{Syntax}
+  \begin{semiverbatim}
+    \uncover<0->{\alert<0>{SELECT att1,att2,att3 FROM tab1}}
+    \uncover<1->{\alert<1>{WHERE att1 [NOT] IN}}
+    \uncover<2->{\alert<2>{(wert1\{,wert2\})}}
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{IN - NOT IN}
+  \framesubtitle{Beispiel}
+  \begin{semiverbatim}
+    \uncover<0->{\alert<0>{SELECT persnr,nachname FROM person}}
+    \uncover<1->{\alert<1>{WHERE persnr IN}}
+    \uncover<2->{\alert<2>{(1,2,3)}}
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{IN - NOT IN}
+  \framesubtitle{Beispiel 2}
+  \begin{semiverbatim}
+    \uncover<0->{\alert<0>{SELECT persnr,nachname FROM person}}
+    \uncover<1->{\alert<1>{WHERE persnr NOT IN}}
+    \uncover<2->{\alert<2>{(SELECT persnr FROM othertable WHERE ...)}}
+  \end{semiverbatim}
+\end{frame}
+
+
+
+\section{Übung 2 - Presse Datenbank}
+%\subsection{Anforderungen}
+
+
+
+
+
+\begin{frame}
+  \frametitle{Übung 2 LB-DB \datum}
+  \framesubtitle{Anforderungen 1}
+  \begin{block}{Presse Datenbank}
+    Sie sind in der IT Abteilung eines Messeveranstalters und mit dem Entwurf
+    einer Presse Datenbank beauftragt.\\
+    Ihre Firma veranstaltet verschiedene Messen,
+    zu der sich die Journalisten registrieren müssen.
+  \end{block}
+
+  \begin{block}{}
+    Journalisten können sich für mehr als eine Messe registrieren.\\
+    Journalisten arbeiten für Medien oder sind als freie Journalisten tätig.
+    Es genügt, wenn Ihre Datenbank den Sachverhalt darstellen kann:
+  \end{block}
+
+\begin{block}{}
+  ''Ein Journalist arbeitet für EIN Medium oder ist freier Journalist''
+\end{block}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Übung 2 LB-DB \datum}
+\framesubtitle{Anforderungen 2}
+
+\begin{block}{}
+Auch wenn kein Journalist namentlich bekannt ist, soll ein Medium mit Informationen
+versorgt werden können.
+\end{block}
+\begin{block}{}
+Mit Ihrem System soll es möglich sein,
+alle Pressekontakte zu einer bestimmten Messe zu informieren.
+\end{block}
+\begin{block}{}
+Berücksichtigen Sie dabei mindestens 3 Informationskanäle
+(email, Post und Telefon) und vergessen Sie nicht die
+Zustimmungserklärung nach dem Telekommunikationsgesetz §107 zu protokollieren.\\
+(erteilt/nicht erteilt mit Zeitpunkt ist ausreichend)
+\end{block}
+\end{frame}
+
+
+%\subsection{Erstellen der Tabellen und Testdaten}
+
+\begin{frame}
+\frametitle{Übung 2 LB-DB \datum}
+\framesubtitle{Erstellen der Tabellen und erstellen der Testdaten}
+\begin{itemize}
+\item Entwerfen Sie ein entsprechendes ERM Modell, legen Sie die Primärschlüssel und
+  Fremdschlüssel fest. Unterstreichen Sie alle Primärschlüssel.
+\item Erzeugen Sie die Tabellen.
+\item Legen Sie mindestens zwei Messen an
+\item Legen Sie mindestens drei Medien an
+\item Legen Sie mindestens vier Journalisten an, die in den angelegten Medien arbeiten
+\item Legen Sie mindestens einen freien Journalisten an
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Übung 2 LB-DB \datum}
+\framesubtitle{Registrierungen eintragen}
+\begin{itemize}
+\item Tragen Sie in Ihre Datenbank ein:
+\item Alle Journalisten registrieren sich für mindestens eine der angelegten Messen
+\item Legen Sie jetzt noch mindestens einen Journalisten an, der sich für keine
+  Messe registriert.
+\item Legen Sie noch ein Medium an und registrieren Sie es für irgendeine Messe.
+\end{itemize}
+\end{frame}
+
+%\subsection{Erstellen der Abfragen}
+
+\begin{frame}
+\frametitle{Übung 2 LB-DB \datum}
+\framesubtitle{Erstellen der Abfragen}
+\begin{itemize}
+\item Erzeugen Sie eine Liste aller Kontakte, die einer beliebigen  Messe
+  zugordnet wurden.\\ 
+Diese Liste besteht aus freien Journalisten, Journalisten die in Medien 
+beschäftigt sind und Medien ohne namentlich registrierte Journalisten.
+\item Legen Sie diese Abfrage als view in der Datenbank ab.
+\item Erzeugen Sie eine Liste der Journalisten, die keiner Messe zugeordnet sind.
+
+\end{itemize}
+
+\end{frame}
+
+
+
+%\subsection{Für die Profis}
+
+
+\begin{frame}
+\frametitle{Übung 2 LB-DB \datum}
+\framesubtitle{...für die Profis}
+\begin{itemize}
+\item Erzeugen sie Indizes auf alle Schlüssel und Fremdschlüssel (UNIQUE?)
+\item Skizzieren Sie eine einfache Zugriffsteuerung\\
+  Benutzer, read only, read write
+\note{Benutzer als DB Rolle oder Tabelle Benutzer} 
+\item Protokollieren Sie jede Änderung eines Journalisten in einer Tabelle log\\
+  wer hat wann geändert, wie sah der Kontakt vorher aus.
+\end{itemize}
+\end{frame}
+
+
+
+
+
+
+%\section{Links}
+
+
+\begin{frame}
+\frametitle{links}
+\begin{enumerate}
+
+\item http://de.wikipedia.org/wiki/Entity-Relationship-Modell
+\item http://de.wikipedia.org/wiki/Relationale\_Datenbank
+\item http://de.wikipedia.org/wiki/SQL
+\item http://www.sql-und-xml.de/xml/sql-tutorial/index
+\item \footnotesize http://de.wikipedia.org/wiki/Liste\_der\_Datenbankmanagementsysteme \normalsize
+\end{enumerate}
+\end{frame}
+
+\end{document}
+
+

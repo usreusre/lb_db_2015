@@ -1,0 +1,364 @@
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+
+}
+
+
+\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+%für Handouts 2 Folien auf einer Din A4 Seite
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+
+\newcommand{\jahr}{2015}
+\newcommand{\datum}{14.3.2015}
+
+\title[LB-DB 4] % (optional, nur bei langen Titeln nötig)
+{LB-DB 4 - \datum}
+
+%\subtitle
+%{} % (optional)
+
+\author[R. Schlager] % (optional, nur bei vielen Autoren)
+{Dipl.-Ing. Reinhard Schlager}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+
+\institute[FH Salzburg] % (optional, aber oft nötig)
+{
+%  \inst{1}%
+  its\\
+  FH Salzburg}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+% - Keep it simple, niemand interessiert sich für die genau Adresse.
+
+\date[] % (optional)
+{\jahr / LB-Datenbanksysteme}
+
+
+\subject{Informatik}
+% Dies wird lediglich in den PDF Informationskatalog einfügt. Kann gut
+% weggelassen werden.
+
+
+% Falls eine Logodatei namens "university-logo-filename.xxx" vorhanden
+% ist, wobei xxx ein von latex bzw. pdflatex lesbares Graphikformat
+% ist, so kann man wie folgt ein Logo einfügen:
+
+\pgfdeclareimage[height=0.5cm]{university-logo}{fh}
+\logo{\pgfuseimage{university-logo}}
+
+
+
+% Folgendes sollte gelöscht werden, wenn man nicht am Anfang jedes
+% Unterabschnitts die Gliederung nochmal sehen möchte.
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Gliederung}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% Falls Aufzählungen immer schrittweise gezeigt werden sollen, kann
+% folgendes Kommando benutzt werden:
+
+\beamerdefaultoverlayspecification{<+->}
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gliederung}
+  \tableofcontents
+  % Die Option [pausesections] könnte nützlich sein.
+\end{frame}
+
+
+\section{Cursor}
+
+\subsection{Cursor wozu?}
+\begin{frame}
+\frametitle{Cursor}
+\framesubtitle{Warum Cursor?}
+
+\begin{block}{Warum Cursor}
+  Zum schrittweisen, prozeduralen Verarbeiten von Records
+\end{block}
+
+\begin{block}{Beispiele}
+  Laden von Daten (ETL)\\
+  Komplexe Reports\\
+  Wenn Aufgabe zu komplex für ein SQL Statement
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Cursor}
+  \framesubtitle{Prinzip}
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{DECLARE CURSOR c_name IS}}
+    \uncover<1->{\alert<1>{SELECT ... FROM ...; }}
+    \uncover<2->{\alert<2>{OPEN c_name;}}    
+    \uncover<3->{\alert<3>{FETCH c_name INTO var;}}
+  \end{semiverbatim}
+\end{frame}
+
+\subsection{Cursor Beispiel}
+
+\begin{frame}[fragile]
+  \frametitle{Cursor}
+%  \framesubtitle{Beispiel}
+\small
+\begin{verbatim}
+DECLARE
+  empId  employees.employee_id%TYPE; 
+  fName   employees.first_name%TYPE;
+  CURSOR e_curs IS
+    SELECT employee_id, first_name 
+    FROM employees;
+BEGIN
+  OPEN e_curs;
+  LOOP
+    FETCH e_curs INTO empid, fName;
+    DBMS_OUTPUT.PUT_LINE('>' || TO_CHAR(empid) || fName);
+    EXIT WHEN e_curs%NOTFOUND;
+  END LOOP;
+  CLOSE e_curs;
+END;
+
+\end{verbatim}
+\end{frame}
+
+\normalsize
+
+
+
+\section{oracle Datentypen}
+
+
+\begin{frame}
+  \frametitle{oracle Datentypen}
+  \framesubtitle{}
+  \begin{itemize}
+\item \emph{VARCHAR2 (n)} - Variable Zeichenkette der maximalen Länge n,
+n zwischen 1 und 4000
+\item \emph{VARCHAR (n)} - wie VARCHAR2
+\item \emph{CHAR (n)} - Feste Zeichenkette von n Byte, n zwischen 1 und 2000
+\item \emph{NCHAR, NVARCHAR} - Zeichenketten mit anderem Zeichensatz als dem der Datenbank
+\item \emph{NUMBER (p, s)} - p von 1 bis 38 (Gesamtzahl der Stellen) und s von -84 bis 127 (Vor- bzw. Nachkommastellen)
+\item \emph{DATE} - Gültiger Datumsbereich von -4712 bis 31.12.9999 enthält immer auch die sekundengenaue Uhrzeit
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{oracle Datentypen}
+  \framesubtitle{}
+  \begin{itemize}
+
+\item \emph{LONG} - Variable Zeichenkette bis zu 2 GB
+\item \emph{RAW (n)} - Binärdaten der Länge n, n zwischen 1 und 2000 Bytes
+\item \emph{LONG RAW} - Binärdaten bis zu 2 GB
+\item \emph{CLOB} - Zeichenketten bis 4 GB
+\item \emph{BLOB} - Binärdaten bis 4 GB
+\item \emph{CFILE, BFILE} - Zeiger auf Dateien (Text, Binär)
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+\section{Benutzer Berechtigungen}
+\subsection{Wofür?}
+
+\begin{frame}
+  \frametitle{oracle Berechtigungen}
+  \framesubtitle{Welche Rechte gibt es?}
+  \begin{itemize}
+  \item SELECT
+  \item INSERT
+  \item UPDATE
+  \item DELETE
+  \item ALTER
+  \item INDEX
+  \item EXECUTE
+  \item ...
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Syntax}
+
+\begin{frame}[fragile]
+  \frametitle{oracle Berechtigungen}
+  \framesubtitle{Syntax}
+  \begin{semiverbatim}
+    \uncover<1->{\alert<0>{GRANT priv\{,priv\}}}
+    \uncover<2->{\alert<1>{ON objectname}}
+    \uncover<3->{\alert<2>{TO user}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\subsection{Beispiel}
+\begin{frame}[fragile]
+  \frametitle{Oracle Berechtigungen}
+  \framesubtitle{Beispiel}
+  \begin{semiverbatim}
+    \uncover<1->{\alert<0>{GRANT SELECT,DELETE}}
+    \uncover<2->{\alert<1>{ON employees}}
+    \uncover<3->{\alert<2>{TO db01}}
+  \end{semiverbatim}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{oracle Berechtigungen entziehen}
+  \framesubtitle{}
+  \begin{semiverbatim}
+    \uncover<0->{\alert<0>{REVOKE priv\{,priv\} ON objectname FROM user}}
+    \uncover<1->{\alert<0>{}}
+    \uncover<2->{\alert<1>{REVOKE ALL ON employees FROM db01}}
+  \end{semiverbatim}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Rollen}
+  \framesubtitle{}
+  \begin{semiverbatim}
+    \uncover<1->{CREATE ROLE emp_readonly}
+    \uncover<2->{GRANT SELECT ON employees TO emp_readonly}
+    \uncover<3->{GRANT  emp_readonly TO db01}
+  \end{semiverbatim}
+\end{frame}
+
+
+
+
+
+
+
+\section{Übung 4}
+
+%\begin{frame}
+%\frametitle{Übung 4}
+%\framesubtitle{4.1 Installateur}
+
+%\begin{block}{Beschreiben Sie folgenden Sachverhalt in einem ER Diagramm}
+%Ein Installateur, der sich auf Heizungssysteme spezialisiert hat, betreibt
+%Standorte, die teilweise unterschiedlich ausgestattet sind. An jedem Standort
+%arbeiten Mitarbeiter mit unterschiedlichen Qualifikationen.Weiters werden
+%Kunden sowie deren Heizungssysteme evident gehalten.
+%\end{block}
+
+%\begin{block}{}
+%Pro Heizungssystem muss festgehalten werden,welcher Leistungstyp 
+%( Service, Wechsel von Teilen, ...) an welchem Standort von
+%welchen Mitarbeitern erbracht wurden.
+%\end{block}
+%\end{frame}
+
+
+\begin{frame}
+\frametitle{Übung 4}
+\framesubtitle{Archiv}
+
+\begin{block}{Archiv einer Zeitung}
+Das Archiv einer Tageszeitung besteht aus mehreren Räumen. In den Räumen
+befinden sich Regale mit Fächern. Die Nummer des Fachs ist pro Regal
+eindeutig.
+In den Fächern sind die einzelnen Ausgaben der Zeitung (identifiziert über den
+Erscheinungstag) abgelegt.
+\end{block}
+
+\begin{block}{}
+Jeder Artikel ist einerseits einem Resort (z.B. Politik, Wirtschaft, Sport,
+...) andererseits beliebig vielen Schlagwörtern zugeordnet.
+\end{block}
+
+\begin{block}{}
+Jeder Artikel wurde von mindestestens einem Journalisten geschrieben.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Übung 4}
+\framesubtitle{Archiv}
+\begin{block}{Entwickeln Sie ein Schema (ERM $\rightarrow$ Tabellen)}
+\dots und fügen Sie einige geeignete Testdaten in die Tabellen ein
+\end{block}
+
+\begin{block}{SQL}
+Formulieren Sie ein SQL Statement, dass alle Artikel über Datenbanksysteme, 
+inkl. der Information wo im Archiv sie zu finden sind, ausgibt.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{stored procedure- freiwillig}
+Die Eintragungen bei der Ablage eines Artikels sollen über eine stored
+procedure gelöst werden.
+Schreiben Sie eine geeignete stored procedure, die einen Artikel ablegt
+und die entsprechenden Eintragungen in den Tabellen vornimmt.\\
+Treffen Sie wenn nötig Annahmen, aber dokumentieren Sie diese.
+
+\end{block}
+
+
+\end{frame}
+
+
+%\begin{frame}
+%\frametitle{Übung 4}
+%\framesubtitle{Abgabe}
+
+%\begin{block}{elektronisch}
+%Zwei ER bis 
+%\end{block}
+
+
+%\end{frame}
+
+
+
+\begin{frame}
+\frametitle{links}
+\begin{enumerate}
+\item http://de.wikipedia.org/wiki/SQL
+\item http://www.muniqsoft.de/tipps/plsql/index\_tipps-plsql.htm
+\item http://www.datenbank-sql.de
+\item http://www.torsten-horn.de/techdocs/sql.htm
+\item http://www.sql-und-xml.de/xml/sql-tutorial/index
+\end{enumerate}
+\end{frame}
+
+
+\end{document}
+
+

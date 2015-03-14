@@ -1,0 +1,341 @@
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+
+}
+
+
+\usepackage[german]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{ textcomp }
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+%für Handouts 2 Folien auf einer Din A4 Seite
+%\usepackage{pgfpages}
+%\pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+
+\newcommand{\jahr}{2015}
+\newcommand{\datum}{14.3.2015}
+
+
+\title[LB-DB 3] % (optional, nur bei langen Titeln nötig)
+{LB-DB 3 - \datum}
+
+%\subtitle
+%{} % (optional)
+
+\author[R. Schlager] % (optional, nur bei vielen Autoren)
+{Dipl.-Ing. Reinhard Schlager}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+
+\institute[FH Salzburg] % (optional, aber oft nötig)
+{
+%  \inst{1}%
+  its\\
+  FH Salzburg}
+% - Der \inst{?} Befehl sollte nur verwendet werden, wenn die Autoren
+%   unterschiedlichen Instituten angehören.
+% - Keep it simple, niemand interessiert sich für die genau Adresse.
+
+\date[] % (optional)
+{\jahr / LB-Datenbanksysteme}
+
+
+\subject{Informatik}
+% Dies wird lediglich in den PDF Informationskatalog einfügt. Kann gut
+% weggelassen werden.
+
+
+% Falls eine Logodatei namens "university-logo-filename.xxx" vorhanden
+% ist, wobei xxx ein von latex bzw. pdflatex lesbares Graphikformat
+% ist, so kann man wie folgt ein Logo einfügen:
+
+\pgfdeclareimage[height=0.5cm]{university-logo}{fh}
+\logo{\pgfuseimage{university-logo}}
+
+
+
+% Folgendes sollte gelöscht werden, wenn man nicht am Anfang jedes
+% Unterabschnitts die Gliederung nochmal sehen möchte.
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Gliederung}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% Falls Aufzählungen immer schrittweise gezeigt werden sollen, kann
+% folgendes Kommando benutzt werden:
+
+\beamerdefaultoverlayspecification{<+->}
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gliederung}
+  \tableofcontents
+  % Die Option [pausesections] könnte nützlich sein.
+\end{frame}
+
+
+
+
+\section{SQL}
+\subsection{Aggregatfunktionen}
+
+\begin{frame}[fragile]
+\frametitle{Agregatfunktionen}
+\framesubtitle{MAX(),MIN(),SUM(),AVG()}
+
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{SELECT aggfunction(att1) FROM tab1 [WHERE ...]}}
+    \uncover<1->{\alert<1>{}}
+    \uncover<2->{\alert<2>{SELECT MAX(salary) FROM employees}} 
+    \uncover<3->{\alert<3>{}}
+    \uncover<3->{\alert<3>{SELECT AVG(salary) FROM employees }}
+    \uncover<3->{\alert<3>{WHERE  department\_id = 100}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\subsection{GROUP BY}
+
+\begin{frame}[fragile]
+\frametitle{GROUP BY}
+\framesubtitle{Gruppieren gleicher Datensätze}
+
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{SELECT department\_id,AVG(salary)}}
+    \uncover<2->{\alert<2>{FROM employees}} 
+    \uncover<3->{\alert<3>{GROUP BY department\_id}}
+  \end{semiverbatim}    
+
+\begin{uncoverenv}<4> \footnotesize{
+  \begin{tabular}{|l|l|}
+    \hline
+    DEPARTMENT\_ID & AVG(SALARY)\\
+    \hline
+    \hline
+    100 & 8600\\
+    \hline
+    30 & 4150\\
+    \hline
+    ... & ...\\
+  \end{tabular}}
+\end{uncoverenv}
+
+\end{frame}
+
+\subsection{Sub-SELECT}
+
+\begin{frame}[fragile]
+\frametitle{Sub-SELECT}
+\framesubtitle{}
+
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{SELECT e1.department\_id,e1.first\_name,e1.salary}}
+    \uncover<2->{\alert<2>{  ,(SELECT avg(e2.salary) FROM employees e2}} 
+    \uncover<3->{\alert<3>{    WHERE e1.department\_id = e2.department\_id}}
+    \uncover<2->{\alert<2>{    GROUP BY e2.department\_id}}
+    \uncover<4->{\alert<4>{    ) AS AVG\_SAL}}
+    \uncover<5->{\alert<5>{FROM employees e1}}
+  \end{semiverbatim}    
+
+\begin{uncoverenv}<6> \footnotesize{
+  \begin{tabular}{|l|l|l|l|}
+    \hline 
+DEPARTMENT\_ID  &FIRST\_NAME    &SALARY &AVG\_SAL\\
+    \hline
+    \hline
+90    &Steven &24000  &19333.33...\\
+    \hline
+90      &Neena  &17000  &19333.33...\\
+    \hline
+90      &Lex    &17000  &19333.33...\\
+    \hline
+60      &Alexander &&  \\    
+... & ...& ... & ...\\ 
+  \end{tabular}}
+\end{uncoverenv}
+
+\end{frame}
+
+\section{SQL scripts - PL/SQL -}
+%\subsection{Beispiel 1}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{PL/SQL}
+
+  \begin{semiverbatim}
+    \uncover<1->{DECLARE}
+    \uncover<1->{  m_salary NUMBER(6); nr_days  NUMBER(2);}
+    \uncover<1->{  per_day  NUMBER(6,2);}
+    \uncover<2->{BEGIN}
+    \uncover<2->{  m_salary := 2290;}
+    \uncover<2->{  nr_days  := 21;}
+    \uncover<2->{  per_day := m_salary/nr_days;}
+    \uncover<3->{  DBMS_OUTPUT.PUT_LINE}
+    \uncover<3->{       (\textquotesingle per day=\textquotesingle ||TO_CHAR(per_day));}
+    \uncover<4->{EXCEPTION}
+    \uncover<4->{WHEN ZERO_DIVIDE THEN}
+    \uncover<4->{     per_day := 0;}
+    \uncover<4->{END;}
+
+
+  \end{semiverbatim}
+\end{frame}
+
+
+\subsection{stored procedure}
+
+\begin{frame}[fragile]
+  \frametitle{stored procedure}
+  \begin{semiverbatim}
+    \uncover<1->{CREATE PROCEDURE today_is AS}
+    \uncover<1->{BEGIN}
+    \uncover<1->{  DBMS_OUTPUT.PUT_LINE}
+    \uncover<1->{  (\textquotesingle Today is \textquotesingle || TO_CHAR(SYSDATE, \textquotesingle DL \textquotesingle) );}
+    \uncover<1->{END today_is;}
+    \uncover<2->{---Aufruf durch }
+    \uncover<2->{BEGIN}
+    \uncover<2->{  today_is();}
+    \uncover<2->{END;}
+
+  \end{semiverbatim}
+\end{frame}
+
+\subsection{stored function}
+
+\begin{frame}[fragile]
+  \frametitle{stored function}
+  \begin{semiverbatim}
+    \uncover<1->{CREATE FUNCTION worked_for (empid NUMBER)}
+    \uncover<1->{ RETURN VARCHAR2 IS}
+    \uncover<2->{ years INT;}
+    \uncover<3->{BEGIN}    
+    \uncover<4->{ SELECT round((sysdate-hire_date )/365)}
+    \uncover<4->{ INTO years FROM employees}
+    \uncover<4->{ WHERE employee_id = empid;}
+    \uncover<5->{ RETURN (\textquotesingle worked for approx. \textquotesingle}
+    \uncover<5->{ || years ||\textquotesingle years\textquotesingle);}
+    \uncover<3->{END worked_for;}
+
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Anwendung}
+  \begin{semiverbatim}
+    \uncover<1->{SELECT hire_date,worked_for(employee_id)}
+    \uncover<1->{FROM employees}
+    \uncover<1->{ORDER BY hire_date}
+
+  \end{semiverbatim}
+\end{frame}
+
+
+%einauen
+%declare status integer;
+%begin
+%    status:= transfer(1,2,1000)
+%end;
+
+\subsection{Trigger}
+\begin{frame}[fragile]
+  \frametitle{Trigger}
+  \begin{semiverbatim}
+    \uncover<1->{CREATE OR REPLACE TRIGGER audit_sal}
+    \uncover<2->{AFTER UPDATE OF salary}
+    \uncover<3->{ON employees FOR EACH ROW}
+    \uncover<4->{BEGIN}
+    \uncover<5->{INSERT INTO emp_audit VALUES}
+    \uncover<5->{( :OLD.employee_id, SYSDATE,} 
+    \uncover<5->{  :NEW.salary, :OLD.salary );}
+    \uncover<4->{END;}
+
+  \end{semiverbatim}
+\end{frame}
+
+
+\subsection{sequence}
+\begin{frame}[fragile]
+  \frametitle{sequence}
+  \begin{semiverbatim}
+    \uncover<1->{CREATE SEQUENCE new_employees_seq}
+    \uncover<2->{START WITH 1000 INCREMENT BY 1;}
+    \uncover<3->{}
+    \uncover<3->{INSERT INTO employees}
+    \uncover<3->{(employee_id,first_name,}
+    \uncover<3->{last_name,email,hire_date,job_id)}
+    \uncover<3->{VALUES} 
+    \uncover<4->{\alert{(new_employees_seq.nextval,}}
+    \uncover<4->{\textquotesingle a\textquotesingle,\textquotesingle b\textquotesingle,\textquotesingle c\textquotesingle,\textquotesingle 14-mar-2015\textquotesingle,\textquotesingle SA_MAN\textquotesingle)}
+  \end{semiverbatim}
+\end{frame}
+
+\subsection{index}
+
+\begin{frame}[fragile]
+  \frametitle{CREATE INDEX}
+
+  \begin{semiverbatim}
+    \uncover<1->{CREATE [UNIQUE] INDEX <index_name>}
+    \uncover<2->{ON <table_name>}
+    \uncover<3->{(<field_name>\{<field_name>\})}
+  \end{semiverbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Beispiel}
+
+  \begin{semiverbatim}
+    \uncover<1->{CREATE UNIQUE INDEX emp_mgr_id_ix}
+    \uncover<2->{ON employees}
+    \uncover<3->{(employee_id)}
+  \end{semiverbatim}
+\end{frame}
+
+
+\section{Übung}
+\begin{frame}
+\frametitle{Übung 3 LB-DB \datum}
+\framesubtitle{}
+\begin{itemize}
+\item Schreiben Sie eine Funktion dif\_to\_avg(employee\_id), die die Abweichung
+  des Gehalts des Mitarbeiters vom Durchschnitt ermittelt.
+\item Schreiben Sie einen Trigger, der das Reduzieren eines Gehalts verhindert.
+  Wenn der neue Gehalt kleiner als der alte Gehalt ist, soll der Gehalt nicht verändert werden.
+\item Formulieren Sie 3 Abfrage auf Basis des HR Schemas. In diesen Abfragen
+müssen die Konstrukte GROUP BY, HAVING, MAX zumindest einmal
+vorkommen. Beschreiben Sie die Abfrage und zeigen Sie das Ergebnis.
+\end{itemize}
+\end{frame}
+
+%\section{Links}
+
+%\begin{frame}
+%\frametitle{Links}
+%\url{http://de.wikipedia.org/wiki/PL/SQL}
+%\end{frame}
+
+
+\end{document}
+
